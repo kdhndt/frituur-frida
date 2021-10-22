@@ -27,3 +27,10 @@ nav li a {
 nav li a:hover {
     color: #F7FFCC;
 }
+
+.naastMekaar {
+    padding-left: 0;
+}
+.naastMekaar li {
+    display: inline;
+}
