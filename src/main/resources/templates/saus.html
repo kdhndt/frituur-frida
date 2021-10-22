@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments::head(title=${saus} ? ${saus.naam} : 'Niet gevonden')"></head>
+<body>
+<nav th:replace="fragments::menu"></nav>
+
+<h1 th:if="not ${saus}">Saus niet gevonden:
+    <!--you can't access the number from a Saus class if that Saus class doesn't exist,
+    what we're really accessing here is the nummer parameter, the number of the page-->
+    <th:block th:text="${nummer}"></th:block>
+</h1>
+
+<!--saus object is only accessible within this scope-->
+<th:block th:if="${saus}" th:object="${saus}">
+    <h1 th:text="*{naam}"></h1>
+    <dl>
+        <dt>Nummer</dt>
+        <dd th:text="*{nummer}"></dd>
+        <dt>Ingredienten</dt>
+        <dd>
+            <ul>
+                <li th:each="ingredient : *{ingredienten}" th:text="${ingredient}"></li>
+            </ul>
+        </dd>
+    </dl>
+    <img th:src="@{/images/{afbeelding}.png(afbeelding=*{naam})}" th:alt="*{naam}">
+</th:block>
+
+</body>
+</html>

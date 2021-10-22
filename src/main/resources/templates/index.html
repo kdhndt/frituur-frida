@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!--www MOET vermeld zijn bij het linken met Thymeleaf template! hoeft NIET in een browser, WEL in je code-->
+<html lang="nl" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments::head(title='Welkom')"></head>
+<body>
+<nav th:replace="fragments::menu"></nav>
+<h1>We zijn vandaag <span th:text="${openGesloten}"></span></h1>
+<h2>Adres</h2>
+<div th:object="${adres}" th:text="|*{straat} *{huisNr} *{gemeente.postCode} *{gemeente.naam}|"></div>
+
+<h1>U heeft de pagina
+<th:block th:text="${aantalBezoeken}"></th:block> keer bezocht.</h1>
+
+</body>
+</html>

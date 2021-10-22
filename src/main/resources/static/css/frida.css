@@ -1,0 +1,29 @@
+body {
+    background-color: #C0BD92;
+    font-family: sans-serif;
+}
+
+h1 {
+    color: blueviolet;
+}
+
+nav ul {
+    background-color: #3e8e41;
+    padding: 0.4em 0;
+}
+
+nav li {
+    display: inline;
+}
+
+nav li a {
+    color: white;
+    font-weight: bold;
+    padding-left: 0.5em;
+    text-decoration: none;
+    vertical-align: middle;
+}
+
+nav li a:hover {
+    color: #F7FFCC;
+}
