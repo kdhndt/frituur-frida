@@ -14,5 +14,9 @@
             </ul>
        </li>
     </ul>
+<h1>Lijst van sauzen</h1>
+<ul>
+    <li th:each="saus : ${sauzen}" th:object="${saus}" th:text="*{naam}"></li>
+</ul>
 </body>
 </html>
