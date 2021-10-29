@@ -45,7 +45,8 @@ public class JdbcSnackRepository implements SnackRepository {
                 set naam = ?, prijs = ?
                 where id = ?
                 """;
-        if (template.update(sql, snack.getId(), snack.getNaam(), snack.getPrijs()) == 0) {
+        //Zorg ervoor dat de volgorde van de getters overeenkomt met de volgorde van de ? in je sql statement, zo voorkom je later problemen bij het testen
+        if (template.update(sql, snack.getNaam(), snack.getPrijs(), snack.getId()) == 0) {
             throw new SnackNietGevondenException();
         }
     }
@@ -56,6 +57,7 @@ public class JdbcSnackRepository implements SnackRepository {
                 select id, naam, prijs
                 from snacks
                 where naam like ? '%'
+                order by naam
                 """;
         return template.query(sql, snackMapper, beginNaam);
     }
