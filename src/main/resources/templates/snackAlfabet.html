@@ -16,5 +16,10 @@
         <li th:each="snack : ${snacksMetEersteLetter}" th:text="${snack.naam}"></li>
     </ul>
 </th:block>
+
+<h1>Alle snacks</h1>
+<ul>
+    <li th:each="snack : ${alleSnacks}"><a th:href="@{/snacks/{id}/wijzigen/form(id=${snack.id})}" th:text="${snack.naam}"></a></li>
+</ul>
 </body>
 </html>

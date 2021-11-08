@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments::head(title='Beginletters')"></head>
+<body>
+<nav th:replace="fragments::menu"></nav>
+<h1>Beginletters</h1>
+<form th:object="${beginLetterForm}" method="get" th:action="@{/snacks/beginletters}">
+    <label>Beginletters:<input th:field="*{beginletters}" autofocus required type="text" min="1"></label>
+    <button>Zoeken</button>
+    <div th:errors="*{beginletters}"></div>
+</form>
+<ul th:if="${snacks}">
+    <li th:each="snack : ${snacks}" th:text="${snack.naam}"></li>
+</ul>
+
+<h1>Alle snacks</h1>
+<ul>
+    <li th:each="snack : ${alleSnacks}"><a th:href="@{/snacks/{id}/wijzigen/form(id=${snack.id})}" th:text="${snack.naam}"></a></li>
+</ul>
+</body>
+</html>

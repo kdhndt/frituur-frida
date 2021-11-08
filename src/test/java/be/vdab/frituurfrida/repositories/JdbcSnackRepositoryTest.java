@@ -15,7 +15,8 @@ import static org.assertj.core.api.Assertions.*;
 
 @JdbcTest
 @Import(JdbcSnackRepository.class)
-@Sql("/insertSnacks.sql")
+@Sql({"/insertSnacks.sql", "/insertDagverkopen.sql"})
+
 class JdbcSnackRepositoryTest extends AbstractTransactionalJUnit4SpringContextTests {
 
     private static final String SNACKS = "snacks";
@@ -61,4 +62,25 @@ class JdbcSnackRepositoryTest extends AbstractTransactionalJUnit4SpringContextTe
                 .isSorted();
 
     }
+
+/*    @Test
+    void findAantalVerkochteSnacks() {
+        var verkochteAantallenPerSnack = repository.findAantalVerkochteSnacks();
+        assertThat(verkochteAantallenPerSnack).hasSize(countRowsInTable(SNACKS));
+        var rij1 = verkochteAantallenPerSnack.get(0);
+        assertThat(rij1.aantal()).isEqualTo(jdbcTemplate.queryForObject(
+                "select sum(aantal) from dagverkopen where snackId = " + rij1.id(), Integer.class));
+    }*/
+
+    @Test
+    void findVerkochtAantalPerSnack() {
+        var verkochteAantallenPerSnack = repository.findVerkochteAantallenPerSnack();
+        assertThat(verkochteAantallenPerSnack).hasSize(countRowsInTable(SNACKS));
+        var rij1 = verkochteAantallenPerSnack.get(0);
+        assertThat(rij1.totaalAantal()).isEqualTo(jdbcTemplate.queryForObject(
+                "select sum(aantal) from dagVerkopen where snackid = " + rij1.id(),
+                Integer.class));
+    }
+
+
 }

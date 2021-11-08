@@ -1,6 +1,7 @@
 package be.vdab.frituurfrida.services;
 
 import be.vdab.frituurfrida.domain.Snack;
+import be.vdab.frituurfrida.dto.VerkochtAantalPerSnack;
 import be.vdab.frituurfrida.repositories.SnackRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,5 +36,14 @@ public class DefaultSnackService implements SnackService {
         return snackRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public List<VerkochtAantalPerSnack> findAantalVerkochteSnacks() {
+        return snackRepository.findVerkochteAantallenPerSnack();
+    }
 
+    @Override
+    public List<Snack> findAll() {
+        return snackRepository.findAll();
+    }
 }

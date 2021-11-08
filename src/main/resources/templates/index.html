@@ -11,5 +11,7 @@
 <h1>U heeft de pagina
 <th:block th:text="${aantalBezoeken}"></th:block> keer bezocht.</h1>
 
+<div th:if="${param.snackNietGevonden}" class="fout">Snack <th:block th:text="${param.snackNietGevonden}"></th:block> niet gevonden</div>
+
 </body>
 </html>

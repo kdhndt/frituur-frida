@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments::head(title='Snack alfabet')"></head>
+<body>
+<script th:src="@{/js/preventDoubleSubmit.js}" defer></script>
+<nav th:replace="fragments::menu"></nav>
+<form th:if="${snack}" th:object="${snack}" th:method="post" th:action="@{/snacks/wijzigen}">
+    <label>Naam:<span th:errors="*{naam}"></span><input th:field="*{naam}" autofocus required></label>
+    <label>Prijs:<span th:errors="*{prijs}"></span><input th:field="*{prijs}" required type="number" min="0"></label>
+    <!--id blijft hetzelfde als de snack die we ontvangen, de rest kan door de gebruiken worden veranderd-->
+    <input type="hidden" name="id" th:value="*{id}">
+<button>Wijzigen</button>
+</form>
+<div class="fout" th:if="not ${snack}">Snack niet gevonden</div>
+</body>
+</html>
