@@ -1,15 +1,20 @@
 package be.vdab.frituurfrida.controllers;
 
 import be.vdab.frituurfrida.domain.Saus;
+import be.vdab.frituurfrida.forms.BeginLetterForm;
+import be.vdab.frituurfrida.forms.RaadLetterForm;
 import be.vdab.frituurfrida.services.SausService;
+import be.vdab.frituurfrida.sessions.RaadDeSaus;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.Arrays;
-import java.util.List;
+import javax.validation.Valid;
+import java.util.Random;
 
 @Controller
 @RequestMapping("sauzen")
@@ -25,8 +30,12 @@ class SausController {
     private final char[] alfabet = "abcdefghijklmnopqrstuvwxyz".toCharArray();
     private final SausService sausService;
 
-    SausController(SausService sausService) {
+    //sessie
+    private final RaadDeSaus raadDeSaus;
+
+    SausController(SausService sausService, RaadDeSaus raadDeSaus) {
         this.sausService = sausService;
+        this.raadDeSaus = raadDeSaus;
     }
 
     @GetMapping
@@ -63,5 +72,52 @@ class SausController {
                 sausService.findByNaamBegintMet(letter))
                 .addObject("alfabet", alfabet);
     }
+
+    public String randomSaus() {
+        var sauzen = sausService.findAll();
+        var random = new Random();
+        var randomIndex = random.nextInt(sauzen.size());
+        return sauzen.get(randomIndex).getNaam();
+    }
+
+    //gebruik een form om de input van de client te valideren, een simpel record met bean validators
+    @GetMapping("raaddesaus/form")
+    public ModelAndView raadDeSaus() {
+        //als je hier naar redirect wordt het spel ge-reset
+        raadDeSaus.reset(randomSaus());
+        return new ModelAndView("raadDeSaus")
+                .addObject("saus", raadDeSaus)
+                .addObject(new RaadLetterForm(null));
+    }
+
+    //je kan niet gewoon verwijzen naar raaddesaus/form in je html, dat is een @GetMapping, code is echter identiek
+    @PostMapping("raaddesaus/nieuwspel")
+    public ModelAndView nieuwSpel() {
+        raadDeSaus.reset(randomSaus());
+        return new ModelAndView("raadDeSaus")
+                .addObject("saus", raadDeSaus)
+                .addObject(new RaadLetterForm(null));
+    }
+
+    @PostMapping("doeeengok")
+    public ModelAndView doeEenGok(@Valid RaadLetterForm form, Errors errors) {
+        if (errors.hasErrors()) {
+            return new ModelAndView("raadDeSaus").addObject("saus", raadDeSaus);
+        }
+        raadDeSaus.doeEenGok(form.letter());
+        //redirecten naar een nieuwe pagina is overzichtelijker, je kan in principe echter ook gewoon terug raadDeSaus teruggeven zoals ik eerder deed
+        return new ModelAndView("redirect:/sauzen/raaddesaus/volgendegok");
+    }
+
+    @GetMapping("raaddesaus/volgendegok")
+    public ModelAndView volgendeGok() {
+        return new ModelAndView("raadDeSaus")
+                //geupdate data van sessie, vergeet je bean geen naam te geven als je dit al eerder deed, anders kan je die niet aanspreken in HTML!
+                .addObject("saus", raadDeSaus)
+                //geef een nieuwe lege form mee
+                .addObject(new RaadLetterForm(null));
+    }
+
+
 
 }
