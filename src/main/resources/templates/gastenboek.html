@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head th:replace="fragments::head(title='Gastenboek')"></head>
+<body>
+<nav th:replace="fragments::menu"></nav>
+<h1>Gastenboek</h1>
+<a th:if="not ${form}" th:href="@{/gastenboek/toonform}">Toevoegen</a>
+
+<form th:if="${form}" method="post" th:object="${form}" th:action="@{/gastenboek/voegtoe}">
+    <label>Naam: <span th:errors="*{naam}"></span><input th:field="*{naam}" autofocus required></label>
+    <label>Bericht: <span th:errors="*{bericht}"></span><input th:field="*{bericht}" required></label>
+    <button>Toevoegen</button>
+</form>
+
+<form th:if="not ${entries.empty}" th:action="@{/gastenboek/verwijderen}" method="post">
+    <ul>
+        <li th:each="entry : ${entries}" th:object="${entry}">
+            <!--different way of concatenating other than th:text="*{asdf} + ' ' + *{test}"-->
+            <!--gebruik dubbele accolade om de datum stijl aan te passen naar je @DateTimeFormat-->
+            <strong th:text="|*{{datum}} *{naam}|"></strong>
+            <th:block th:text="*{bericht}"></th:block>
+            <!--we gebruiken "getId", dus id is hier ok ipv berichtId-->
+            <input type="checkbox" name="id" th:value="*{id}">
+        </li>
+    </ul>
+    <button>Verwijderen</button>
+</form>
+
+</body>
+</html>
